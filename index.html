@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="description" content="Интерактивный 3D-лекторий к Международному дню науки: физика футбола, спринта, прыжка с шестом, велосипеда и плавания для 1–4 классов.">
+  <meta name="theme-color" content="#f6f1e4">
+  <meta property="og:title" content="Физика безупречного гола">
+  <meta property="og:description" content="9 глав, 39 минут, настоящие 3D-сцены и три секрета: сила, вращение, точность.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="qa/screenshots/1366x768/chapter-01.png">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23f6f1e4'/%3E%3Ccircle cx='32' cy='32' r='17' fill='%23f26b2a'/%3E%3Ccircle cx='32' cy='32' r='7' fill='%23fff8ea'/%3E%3C/svg%3E">
+  <title>Физика безупречного гола — интерактивный лекторий</title>
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+  <div class="app" id="app">
+    <div class="paper-grain" aria-hidden="true"></div>
+
+    <header class="topbar">
+      <div class="brand" aria-label="Физика рекорда">
+        <span class="brand-mark" aria-hidden="true"><span></span></span>
+        <span class="brand-text">ФИЗИКА<br>РЕКОРДА</span>
+      </div>
+      <div class="chapter-meta">
+        <span class="chapter-num" id="chapterNum">01</span>
+        <span class="chapter-name" id="chapterName">Титул</span>
+      </div>
+      <nav class="top-actions" aria-label="Инструменты лектора">
+        <button class="icon-btn wide" type="button" data-action="index" aria-label="Все главы (M)" title="Все главы (M)">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg>
+          <span>Главы</span>
+        </button>
+        <button class="icon-btn" type="button" data-action="secrets" aria-label="Три секрета (S)" title="Три секрета (S)">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>
+        </button>
+        <button class="icon-btn" type="button" data-action="warmup" aria-label="Разминка (W)" title="Разминка (W)">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2 4.5 13.5H11L10 22l8.5-11.5H12L13 2Z"/></svg>
+        </button>
+        <button class="icon-btn" type="button" data-action="notes" aria-label="Заметки лектора (N)" title="Заметки лектора (N)">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h11l3 3v15H5z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>
+        </button>
+        <button class="icon-btn" type="button" data-action="pause" id="pauseBtn" aria-label="Пауза автоповорота" aria-pressed="false" title="Пауза автоповорота">
+          <svg viewBox="0 0 24 24" aria-hidden="true" class="ico-pause"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>
+          <svg viewBox="0 0 24 24" aria-hidden="true" class="ico-play"><path d="M8 4l12 8-12 8z"/></svg>
+        </button>
+        <button class="icon-btn" type="button" data-action="fullscreen" id="fullscreenBtn" aria-label="Полный экран (F)" title="Полный экран (F)">
+          <svg viewBox="0 0 24 24" aria-hidden="true" class="ico-fs"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+          <svg viewBox="0 0 24 24" aria-hidden="true" class="ico-exit"><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/></svg>
+        </button>
+      </nav>
+    </header>
+
+    <main class="slides" id="slides" aria-live="polite"></main>
+
+    <footer class="bottombar">
+      <button class="nav-btn" id="prevBtn" type="button" aria-label="Предыдущая глава">←</button>
+      <div class="progress-wrap">
+        <div class="dots" id="dots" aria-label="Главы"></div>
+        <div class="progress-track" aria-hidden="true"><div class="progress-fill" id="progressFill"></div></div>
+      </div>
+      <div class="counter" id="counter">1 / 9</div>
+      <button class="nav-btn primary" id="nextBtn" type="button" aria-label="Следующая глава">→</button>
+    </footer>
+
+    <div class="labels" id="labels" aria-hidden="true"></div>
+
+    <aside class="drawer notes" id="notesDrawer" aria-label="Заметки лектора" hidden>
+      <div class="drawer-head">
+        <div>
+          <div class="panel-kicker">Сценарий лектора</div>
+          <h2 id="notesTitle">Заметки</h2>
+        </div>
+        <button class="icon-btn" type="button" data-close="notes" aria-label="Закрыть заметки">×</button>
+      </div>
+      <div class="notes-warning">Заметки видны на общем экране. Закройте их перед показом классу.</div>
+      <div class="notes-body" id="notesBody"></div>
+    </aside>
+
+    <div class="overlay" id="indexOverlay" hidden>
+      <div class="overlay-card index-card" role="dialog" aria-modal="true" aria-labelledby="indexTitle">
+        <div class="overlay-head">
+          <div>
+            <div class="panel-kicker">39 минут · 9 глав</div>
+            <h2 id="indexTitle">Главы урока</h2>
+          </div>
+          <button class="icon-btn" type="button" data-close="index" aria-label="Закрыть">×</button>
+        </div>
+        <div class="index-grid" id="indexGrid"></div>
+      </div>
+    </div>
+
+    <div class="overlay" id="secretsOverlay" hidden>
+      <div class="overlay-card secret-card-wrap" role="dialog" aria-modal="true" aria-labelledby="secretsTitle">
+        <div class="overlay-head">
+          <div>
+            <div class="panel-kicker">Опорная схема</div>
+            <h2 id="secretsTitle">Три секрета</h2>
+          </div>
+          <button class="icon-btn" type="button" data-close="secrets" aria-label="Закрыть">×</button>
+        </div>
+        <p class="overlay-lead">Скажите слово — покажите жест. Повторите два раза.</p>
+        <div class="secret-grid big">
+          <div class="secret-card static" data-secret-card="force">
+            <span class="secret-num">1</span>
+            <strong>СИЛА</strong>
+            <span class="gesture">топнуть ногой</span>
+            <span class="secret-note">Сильнее оттолкнулся — быстрее полетел.</span>
+          </div>
+          <div class="secret-card static" data-secret-card="spin">
+            <span class="secret-num">2</span>
+            <strong>ВРАЩЕНИЕ</strong>
+            <span class="gesture">покрутить рукой</span>
+            <span class="secret-note">Закрутил — мяч полетел по дуге.</span>
+          </div>
+          <div class="secret-card static" data-secret-card="precision">
+            <span class="secret-num">3</span>
+            <strong>ТОЧНОСТЬ</strong>
+            <span class="gesture">показать на цель</span>
+            <span class="secret-note">Попал в угол — получил результат.</span>
+          </div>
+        </div>
+        <div class="overlay-actions">
+          <button class="btn primary" type="button" data-repeat-secrets>Повторим ещё раз</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="overlay warmup" id="warmupOverlay" hidden>
+      <div class="overlay-card warmup-card" role="dialog" aria-modal="true" aria-labelledby="warmupTitle">
+        <div class="overlay-head">
+          <div>
+            <div class="panel-kicker">Физкультминутка · 60 секунд</div>
+            <h2 id="warmupTitle">Встали! Повторяем три секрета</h2>
+          </div>
+          <button class="icon-btn" type="button" data-close="warmup" aria-label="Закрыть">×</button>
+        </div>
+        <div class="warmup-timer" id="warmupTimer">60</div>
+        <div class="warmup-steps" id="warmupSteps">
+          <div class="warmup-step" data-step="0"><strong>СИЛА</strong><span>топнуть 4 раза</span></div>
+          <div class="warmup-step" data-step="1"><strong>ВРАЩЕНИЕ</strong><span>покрутить руками 4 раза</span></div>
+          <div class="warmup-step" data-step="2"><strong>ТОЧНОСТЬ</strong><span>показать в цель 4 раза</span></div>
+        </div>
+        <div class="overlay-actions">
+          <button class="btn primary" type="button" id="warmupStart">Старт</button>
+          <button class="btn secondary" type="button" id="warmupStop">Стоп</button>
+        </div>
+        <p class="overlay-lead small">Повторяем два круга. После — садимся и продолжаем.</p>
+      </div>
+    </div>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <div class="wipe" id="wipe" aria-hidden="true"></div>
+  </div>
+
+  <script src="assets/vendor/three.global.js"></script>
+  <script src="assets/js/content.js"></script>
+  <script src="assets/js/models.js"></script>
+  <script src="assets/js/scenes.js"></script>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>
